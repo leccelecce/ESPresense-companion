@@ -1,0 +1,30 @@
+@page "/device/{id}"
+@inject DeviceManager DeviceManager
+
+<h3>Device Details: @Device?.Name</h3>
+
+@if (Device == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <p>ID: @Device.Id</p>
+    <p>Name: @Device.Name</p>
+    <p>RSSI@1m: @Device.RssiAt1m</p>
+    <!-- Add more device details here -->
+
+    <RssiCalibrationComponent Device="@Device" />
+}
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+
+    private Device Device { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Device = DeviceManager.GetDevice(Id);
+    }
+}
