@@ -26,6 +26,7 @@ public class Scenario(Config? config, ILocate locator, string? name)
     public Floor? Floor { get; set; }
     public DateTime? LastHit { get; set; }
     public double Probability { get; set; } = 1.0;
+    public int RssiAt1m { get; set; } = -59; // Default value, can be calibrated
 
     // Kalman filter properties
     private Matrix<double>? _kalmanStateEstimate;

@@ -1,0 +1,50 @@
+@using ESPresense.Models
+@using ESPresense.Services
+@inject DeviceManager DeviceManager
+@inject NodeManager NodeManager
+
+<h3>RSSI Calibration</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Node</th>
+            <th>Current RSSI</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var node in NodeManager.Nodes)
+        {
+            <tr>
+                <td>@node.Name</td>
+                <td>@GetCurrentRssi(node)</td>
+                <td>
+                    <button class="btn btn-primary" @onclick="() => CalibrateRssi(node)">
+                        Set RSSI@1m
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@code {
+    [Parameter]
+    public Device Device { get; set; }
+
+    private int? GetCurrentRssi(Node node)
+    {
+        return Device.Nodes.TryGetValue(node.Id, out var deviceNode) ? deviceNode.Rssi : null;
+    }
+
+    private void CalibrateRssi(Node node)
+    {
+        var currentRssi = GetCurrentRssi(node);
+        if (currentRssi.HasValue)
+        {
+            Device.RssiAt1m = currentRssi.Value;
+            DeviceManager.UpdateDevice(Device);
+        }
+    }
+}
