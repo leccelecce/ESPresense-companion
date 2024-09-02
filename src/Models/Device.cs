@@ -7,6 +7,10 @@ namespace ESPresense.Models;
 
 public class Device
 {
+    public string Id { get; set; }
+    public string Name { get; set; }
+    public int? RssiAt1m { get; set; }
+{
     public Device(string id, TimeSpan timeout)
     {
         Id = id;

@@ -15,9 +15,18 @@ public class DeviceManager
             existingDevice.RssiAt1m = device.RssiAt1m;
             // Update other properties as needed
         }
+        else
+        {
+            Devices.Add(device);
+        }
 
         // Persist the changes (implement this method based on your storage mechanism)
         SaveChanges();
+    }
+
+    public Device? GetDevice(string id)
+    {
+        return Devices.FirstOrDefault(d => d.Id == id);
     }
 
     private void SaveChanges()

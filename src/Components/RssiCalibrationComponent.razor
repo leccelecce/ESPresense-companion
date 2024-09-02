@@ -43,7 +43,7 @@
         var currentRssi = GetCurrentRssi(node);
         if (currentRssi.HasValue)
         {
-            Device.RssiAt1m = currentRssi.Value;
+            Device.RssiAt1m = (int)currentRssi.Value;
             DeviceManager.UpdateDevice(Device);
         }
     }

@@ -21,9 +21,9 @@ else
 
 @code {
     [Parameter]
-    public string Id { get; set; }
+    public string Id { get; set; } = string.Empty;
 
-    private Device Device { get; set; }
+    private Device? Device { get; set; }
 
     protected override void OnInitialized()
     {
