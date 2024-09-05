@@ -2,7 +2,7 @@
 
 export WORKSPACE_BASE=$(pwd)
 
-sudo docker run \
+docker run \
     -it \
     --pull=always \
     --add-host host.docker.internal:host-gateway \
