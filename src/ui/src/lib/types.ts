@@ -122,6 +122,52 @@ export interface Release {
 	name: string;
 }
 
+export interface CalibrationData {
+	matrix: {
+		[key: string]: {
+			[key: string]: {
+				expected?: number;
+				actual?: number;
+				err?: number;
+				percent?: number;
+				absorption?: number;
+				rx_adj_rssi?: number;
+				tx_ref_rssi?: number;
+				var?: number;
+			}
+		}
+	}
+}
+
+export type Settings = {
+	updating: {
+		autoUpdate: boolean;
+		preRelease: boolean;
+	};
+	scanning: {
+		forgetAfterMs: number | null;
+	};
+	counting: {
+		idPrefixes: string | null;
+		startCountingDistance: number | null;
+		stopCountingDistance: number | null;
+		includeDevicesAge: number | null;
+	};
+	filtering: {
+		includeIds: string | null;
+		excludeIds: string | null;
+		maxReportDistance: number | null;
+		earlyReportDistance: number | null;
+		skipReportAge: number | null;
+	};
+	calibration: {
+		rssiAt1m: number | null;
+		rssiAdjustment: number | null;
+		absorptionFactor: number | null;
+		iBeaconRssiAt1m: number | null;
+	};
+};
+
 export function isNode(d: Device | Node | null): d is Node {
 	return (d as Node)?.telemetry !== undefined;
 }

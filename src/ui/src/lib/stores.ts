@@ -1,6 +1,6 @@
 import { readable, writable, derived } from 'svelte/store';
 import { base } from '$app/paths';
-import type { Device, Config, Node } from './types';
+import type { Device, Config, Node, Settings, CalibrationData } from './types';
 
 export const showAll: SvelteStore<boolean> = writable(false);
 export const config = writable<Config>();
@@ -54,8 +54,8 @@ export const devices = readable<Device[]>([], function start(set) {
 	function fetchDevices() {
 		fetch(`${base}/api/state/devices`)
 			.then((d) => d.json())
-			.then((r) => {
-				deviceMap = new Map(r.map((device) => [device.id, device]));
+			.then((r: Device[]) => {
+				deviceMap = new Map(r.map((device: Device) => [device.id, device]));
 				updateDevicesFromMap();
 			})
 			.catch((ex) => {
@@ -117,7 +117,7 @@ export const nodes = readable<Node[]>([], function start(set) {
 	};
 });
 
-export const calibration = readable({}, function start(set) {
+export const calibration = readable<CalibrationData>({ matrix: {} }, function start(set) {
 	async function fetchAndSet() {
 		const response = await fetch(`${base}/api/state/calibration`);
 		var data = await response.json();
@@ -133,3 +133,30 @@ export const calibration = readable({}, function start(set) {
 		clearInterval(interval);
 	};
 });
+
+export const settings = (() => {
+	const { subscribe, set, update } = writable<Settings | null>(null);
+
+	return {
+		subscribe,
+		set,
+		update,
+		load: async () => {
+			const response = await fetch(`${base}/api/settings`);
+			if (!response.ok) throw new Error("Something went wrong loading settings (error="+response.status+" "+response.statusText+")");
+			const data = await response.json();
+			set(data);
+		},
+		save: async (newSettings: Settings) => {
+			const response = await fetch(`${base}/api/settings`, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(newSettings),
+			});
+			const data = await response.json();
+			set(data);
+		},
+	};
+})();
