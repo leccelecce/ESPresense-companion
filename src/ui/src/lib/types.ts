@@ -55,14 +55,7 @@ export interface Config {
 	devices: Device[];
 }
 
-export type NodeSetting = {
-	id: string | null;
-	name: string | null;
-	absorption: number | null;
-	rx_adj_rssi: number | null;
-	tx_ref_rssi: number | null;
-	max_distance: number | null;
-};
+export type DeviceDetail = Array<{ key: string; value: string }>;
 
 export type DeviceSetting = {
 	originalId: string;
@@ -139,7 +132,9 @@ export interface CalibrationData {
 	}
 }
 
-export type Settings = {
+export type NodeSetting = {
+	id: string | null;
+	name: string | null;
 	updating: {
 		autoUpdate: boolean;
 		preRelease: boolean;
@@ -163,7 +158,7 @@ export type Settings = {
 	calibration: {
 		rssiAt1m: number | null;
 		rssiAdjustment: number | null;
-		absorptionFactor: number | null;
+		absorption: number | null;
 		iBeaconRssiAt1m: number | null;
 	};
 };
