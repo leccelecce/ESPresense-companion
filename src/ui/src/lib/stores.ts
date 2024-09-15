@@ -1,7 +1,6 @@
 import { readable, writable, derived } from 'svelte/store';
 import { base } from '$app/paths';
-import type { Device, Config, Node, Settings, CalibrationData } from './types';
-import { loadSettings, saveSettings } from './node';
+import type { Device, Config, Node, CalibrationData } from './types';
 import { fetchConfig, fetchCalibrationState, fetchDeviceState, fetchNodeState } from './state';
 
 export const showAll: SvelteStore<boolean> = writable(false);
@@ -128,21 +127,3 @@ export const calibration = readable<CalibrationData>({ matrix: {} }, function st
 		clearInterval(interval);
 	};
 });
-
-export const settings = (() => {
-	const { subscribe, set, update } = writable<Settings | null>(null);
-
-	return {
-		subscribe,
-		set,
-		update,
-		load: async () => {
-			const data = await loadSettings("*");
-			set(data);
-		},
-		save: async (newSettings: Settings) => {
-			const data = await saveSettings(newSettings);
-			set(data);
-		},
-	};
-})();

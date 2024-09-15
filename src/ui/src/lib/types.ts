@@ -132,6 +132,8 @@ export interface CalibrationData {
 	}
 }
 
+export type NodeDetail = Array<{ key: string; value: string }>;
+
 export type NodeSetting = {
 	id: string | null;
 	name: string | null;

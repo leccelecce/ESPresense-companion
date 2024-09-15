@@ -9,13 +9,19 @@ namespace ESPresense.Controllers;
 public class NodeController(NodeSettingsStore nodeSettingsStore, State state) : ControllerBase
 {
     [HttpGet("{id}/settings")]
-    public NodeSettingsDetails Get(string id)
+    public NodeSettings Get(string id)
     {
         var nodeSettings = nodeSettingsStore.Get(id);
+        return nodeSettings ?? new Models.NodeSettings(id);
+    }
+
+    [HttpGet("{id}/details")]
+    public IList<KeyValuePair<string, string>> Details(string id)
+    {
         var details = new List<KeyValuePair<string, string>>();
-        if (nodeSettings?.Id != null && state.Nodes.TryGetValue(id, out var node))
+        if (state.Nodes.TryGetValue(id, out var node))
             details.AddRange(node.GetDetails());
-        return new NodeSettingsDetails(nodeSettings ?? new Models.NodeSettings(id), details);
+        return details;
     }
 
     [HttpPut("{id}/settings")]

@@ -1,11 +1,11 @@
 <script lang="ts">
-	import { base } from '$app/paths';
 	import link from '$lib/images/link.svg';
 	import type { Node } from '$lib/types';
 	import { getModalStore, getToastStore, type ToastSettings } from '@skeletonlabs/skeleton';
 	import { updateMethod, flavor, version, artifact, flavorNames } from '$lib/firmware';
 	import Firmware from '$lib/modals/Firmware.svelte';
-	import { restartNode, updateNodeSelf } from '$lib/node';
+	import { restartNode, updateNode } from '$lib/node';
+	import { gotoSettings } from '$lib/urls';
 
 	const modalStore = getModalStore();
 	const toastStore = getToastStore();
@@ -18,6 +18,10 @@
 			console.log(e);
 			toastStore.trigger({ message: e instanceof Error ? e.message : String(e), background: 'variant-filled-error' });
 		}
+	}
+
+	function onSettings(i: Node) {
+		gotoSettings(i.id);
 	}
 
 	function onUpdate(i: Node) {
@@ -44,7 +48,7 @@
 			});
 		} else {
 			if (i) {
-				updateNodeSelf(i.id)
+				updateNode(i.id)
 					.then(() => {
 						const t: ToastSettings = { message: (i.name ?? i.id) + ' asked to update itself', background: 'variant-filled-primary' };
 						toastStore.trigger(t);
@@ -70,6 +74,8 @@
 	{#if row.telemetry}
 		<button on:click={() => onRestart(row)} class="btn btn-sm variant-filled">Restart</button>
 	{/if}
+
+	<button on:click={() => onSettings(row)} class="btn btn-sm variant-filled">Settings</button>
 
 	{#if row.telemetry?.ip}
 		<a href="http://{row.telemetry?.ip}" target="_blank" class="btn btn-sm variant-filled">
